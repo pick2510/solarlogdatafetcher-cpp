@@ -109,9 +109,57 @@ void parseInverters(solarlogdatafetcher::Plant &plant) {
     cout << "==============================================================" << endl;
     cout << "Parsing Inverters" << endl;
     cout << "==============================================================" << endl;
+    string s_response = plant.getHttpResponse();
+    unsigned int i_stringcount=0;
     for (int i = 0; i < plant.getInverterCount(); i++) {
         stringstream ss_invregex;
-        ss_invregex<< "WRInfo\\[" << i << "\\]\\=new\\sArray\\(\
+        string s_invname;
+        ss_invregex << "WRInfo\\[" << i << "\\]=new\\sArray\\(\"([\\w\\s-]*)\"";
+        regex r_invsearch(ss_invregex.str());
+        smatch m_invresult;
+        regex_search(s_response, m_invresult, r_invsearch);
+        if (m_invresult.empty()) {
+            cout << endl;
+            cout << "==============================================================" << endl;
+            cout << "ERROR: Empty Match. No WR count found" << endl;
+            cout << "==============================================================" << endl;
+            exit(1);
+        }
+        s_invname = m_invresult[1];
+        if (DEBUG == true){
+            cout << s_invname << endl;
+        }
+        ss_invregex.str("");
+        
+        string s_invstringnames;
+        smatch m_invnameresult;
+        ss_invregex << "WRInfo\\[" << i << "\\]\\[6\\]=new\\sArray\\(\"([\\s\\w,.\\-\"]*)";
+        regex r_invstringname(ss_invregex.str());
+        regex_search(s_response, m_invnameresult, r_invstringname);
+        if (m_invnameresult.empty()) {
+            cout << endl;
+            cout << "==============================================================" << endl;
+            cout << "ERROR: Empty Match. No WR count found" << endl;
+            cout << "==============================================================" << endl;
+            exit(1);
+        }
+        s_invstringnames = m_invnameresult[1];
+        char c_rem[] = "\"";
+        strebel::removeCharsFromString(s_invstringnames, c_rem);
+        char c_tok = ',';
+        vector<string> v_stringnames = strebel::splitString(s_invstringnames, c_tok);
+        if (DEBUG == true){
+            cout << s_invstringnames << endl;
+        }
+        solarlogdatafetcher::Inverter inv = solarlogdatafetcher::Inverter(s_invname, i+1);
+        for (unsigned int i = 0; i != v_stringnames.size(); i++) {
+              solarlogdatafetcher::Modulestring m_string = solarlogdatafetcher::Modulestring(v_stringnames[i], i+1);
+              inv.addString(m_string);
+        }        
+        i_stringcount += v_stringnames.size();
+        cout << i_stringcount << endl;
+        plant.addInverter(inv);
+        
     }
 }
 
@@ -242,6 +290,6 @@ int main(int argc, char *argv[]) {
     solarlogdatafetcher::Plant plant = solarlogdatafetcher::Plant();
     plant = parseBasevars(plant_config);
     cout << plant.getName() << endl;
+    parseInverters(plant);
     return 0;
 }
-    

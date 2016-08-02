@@ -6,13 +6,23 @@
  */
 
 #include "Modulestring.h"
+#include <vector>
+#include <string>
 
 namespace solarlogdatafetcher {
+
+using namespace std;
 
 Modulestring::Modulestring() {
     this->number = 1;
     this->name = "Name";
 }
+
+Modulestring::Modulestring(string name, int number){
+    this->number = number;
+    this->name = name;
+}
+
 
 const string& Modulestring::getName() const {
     return name;
@@ -37,12 +47,6 @@ void Modulestring::setNumber(int number) {
 Modulestring::~Modulestring() {
     // TODO Auto-generated destructor stub
 }
-
-Modulestring::Modulestring(string name, int number) {
-    this->name = name;
-    this->number = number;
-}
-
 void Modulestring::addData(string line) {
     this->data.push_back(line);
 }

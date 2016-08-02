@@ -14,14 +14,14 @@ GREP=grep
 NM=nm
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=clang
-CCC=clang++
-CXX=clang++
+CC=gcc
+CCC=g++
+CXX=g++
 FC=gfortran
 AS=as
 
 # Macros
-CND_PLATFORM=CLang-MacOSX
+CND_PLATFORM=GNU-MacOSX
 CND_DLIB_EXT=dylib
 CND_CONF=Release
 CND_DISTDIR=dist
@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/Inverter.o \
 	${OBJECTDIR}/src/Modulestring.o \
 	${OBJECTDIR}/src/Plant.o \
+	${OBJECTDIR}/src/libstrebel.o \
 	${OBJECTDIR}/src/md5.o \
 	${OBJECTDIR}/src/solarlogdatafetcher.o
 
@@ -69,27 +70,32 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/solarlogdatafetcher: ${OBJECTFILES}
 ${OBJECTDIR}/src/Inverter.o: src/Inverter.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Inverter.o src/Inverter.cpp
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Inverter.o src/Inverter.cpp
 
 ${OBJECTDIR}/src/Modulestring.o: src/Modulestring.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Modulestring.o src/Modulestring.cpp
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Modulestring.o src/Modulestring.cpp
 
 ${OBJECTDIR}/src/Plant.o: src/Plant.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Plant.o src/Plant.cpp
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Plant.o src/Plant.cpp
+
+${OBJECTDIR}/src/libstrebel.o: src/libstrebel.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/libstrebel.o src/libstrebel.cpp
 
 ${OBJECTDIR}/src/md5.o: src/md5.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/md5.o src/md5.cpp
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/md5.o src/md5.cpp
 
 ${OBJECTDIR}/src/solarlogdatafetcher.o: src/solarlogdatafetcher.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/solarlogdatafetcher.o src/solarlogdatafetcher.cpp
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/solarlogdatafetcher.o src/solarlogdatafetcher.cpp
 
 # Subprojects
 .build-subprojects:

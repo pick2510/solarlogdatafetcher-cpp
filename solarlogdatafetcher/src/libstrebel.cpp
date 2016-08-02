@@ -4,8 +4,11 @@
  * and open the template in the editor.
  */
 #include <cctype>
+#include <iostream>
+#include <sstream>
 #include <string>
 #include <algorithm>
+#include <vector>
 #include "utf8.h"
 
 #include "libstrebel.h"
@@ -57,5 +60,17 @@ size_t iso8859_1_to_utf8(char *content, size_t max_size) {
         }
     }
     return 0; // SUCCESS
+}
+
+void removeCharsFromString(std::string &str, char* charsToRemove) {
+    for (unsigned int i = 0; i < strlen(charsToRemove); ++i) {
+        str.erase(remove(str.begin(), str.end(), charsToRemove[i]), str.end());
+    }
+}
+std::vector<std::string> splitString(std::string &str, char &token) {
+   std::istringstream split(str);
+   std::vector<std::string> tokens;
+   for (std::string each; std::getline(split, each, token); tokens.push_back(each));
+   return tokens; 
 }
 }
