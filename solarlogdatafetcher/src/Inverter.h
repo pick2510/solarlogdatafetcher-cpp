@@ -13,28 +13,28 @@
 using namespace std;
 namespace solarlogdatafetcher {
 
-    using std::vector;
-    using std::string;
+using std::vector;
+using std::string;
 
-    class Inverter {
-    private:
-        vector<Modulestring> modulestrings;
-        int stringcount;
-        string name;
-        int number;
+class Inverter {
+private:
+    vector<Modulestring> modulestrings;
+    int stringcount;
+    string name;
+    int number;
 
-    public:
-        Inverter();
-        Inverter(string name, int number);
-        virtual ~Inverter();
-        const vector<Modulestring>& getModulestrings() const;
-        const string& getName() const;
-        void setName(const string& name);
-        int getNumber() const;
-        void setNumber(int number);
-        int getStringcount() const;
-        void addString(Modulestring mstring);
-    };
+public:
+    Inverter();
+    Inverter(string name, int number);
+    virtual ~Inverter();
+    const vector<Modulestring>& getModulestrings() const;
+    const string& getName() const;
+    void setName(const string& name);
+    int getNumber() const;
+    void setNumber(int number);
+    int getStringcount() const;
+    void addString(Modulestring mstring);
+};
 
 } /* namespace solarlogdatafetcher */
 

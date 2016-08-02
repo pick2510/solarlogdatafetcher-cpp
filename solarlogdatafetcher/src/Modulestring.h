@@ -13,25 +13,25 @@
 
 namespace solarlogdatafetcher {
 
-    using std::vector;
-    using std::string;
+using std::vector;
+using std::string;
 
-    class Modulestring {
-    private:
-        vector<string> data;
-        string name;
-        int number;
-    public:
-        Modulestring();
-        Modulestring(string name, int number);
-        virtual ~Modulestring();
-        const string& getName() const;
-        void setName(const string& name);
-        int getNumber() const;
-        void setNumber(int number);
-        const vector<string>& getData() const;
-        void addData(string line);
-    };
+class Modulestring {
+private:
+    vector<string> data;
+    string name;
+    int number;
+public:
+    Modulestring();
+    Modulestring(string name, int number);
+    virtual ~Modulestring();
+    const string& getName() const;
+    void setName(const string& name);
+    int getNumber() const;
+    void setNumber(int number);
+    const vector<string>& getData() const;
+    void addData(string line);
+};
 
 } /* namespace solarlogdatafetcher */
 

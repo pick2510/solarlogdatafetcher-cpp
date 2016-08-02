@@ -6,70 +6,80 @@
  */
 
 #include "Plant.h"
-#include "md5.h"
 using namespace std;
 
 
 namespace solarlogdatafetcher {
 
-    Plant::Plant() {
-        // TODO Auto-generated constructor stub
-        this->name = "Test";
-        this->inverterCount = 0;
-        this->serialnumber = 1234234;
-        this->password = "Testpw";
-        this->digest = md5(this->password);
-        std::cout << this->digest << std::endl;
-    }
+Plant::Plant() {
+    // TODO Auto-generated constructor stub
+    this->name = "Test";
+    this->inverterCount = 0;
+    this->serialnumber = 1234234;
+    this->password = "Testpw";
 
-    Plant::Plant(string name, long serialnumber, string password) {
-        this->name = name;
-        this->serialnumber = serialnumber;
-        this->password = password;
-        this->inverterCount = 0;
-        this->digest = md5(this->password);
-        std::cout << this->digest << std::endl;
-    }
+}
 
-    const vector<Inverter>& Plant::getInverters() const {
-        return inverters;
-    }
+Plant::Plant(string name, long serialnumber, string password, int invCount) {
+    this->name = name;
+    this->serialnumber = serialnumber;
+    this->password = password;
+    this->inverterCount = invCount;
+}
+Plant::Plant(const Plant& other){
+    std::cout << "Copy Constructor Called!" << std::endl;
+}
 
-    const string& Plant::getName() const {
-        return name;
-    }
+const vector<Inverter>& Plant::getInverters() const {
+    return inverters;
+}
 
-    void Plant::setName(const string& name) {
-        this->name = name;
-    }
+const string& Plant::getName() const {
+    return name;
+}
 
-    const string& Plant::getPassword() const {
-        return password;
-    }
+void Plant::setName(const string& name) {
+    this->name = name;
+}
 
-    void Plant::setPassword(const string& password) {
-        this->password = password;
-    }
+const string& Plant::getPassword() const {
+    return password;
+}
 
-    long Plant::getSerialnumber() const {
-        return serialnumber;
-    }
+void Plant::setPassword(const string& password) {
+    this->password = password;
+}
 
-    int Plant::getInverterCount() const {
-        return inverterCount;
-    }
+long Plant::getSerialnumber() const {
+    return serialnumber;
+}
 
-    void Plant::setSerialnumber(long serialnumber) {
-        this->serialnumber = serialnumber;
-    }
+int Plant::getInverterCount() const {
+    return inverterCount;
+}
 
-    Plant::~Plant() {
-        // TODO Auto-generated destructor stub
-    }
+void Plant::setInverterCount(int inverterCount) {
+    this->inverterCount = inverterCount;
+}
 
-    void Plant::addInverter(Inverter inv) {
-        this->inverters.push_back(inv);
-        this->inverterCount++;
-    }
+void Plant::setHttpResponse(string httpResponse) {
+    this->httpResponse = httpResponse;
+}
+
+string Plant::getHttpResponse() const {
+    return httpResponse;
+}
+
+void Plant::setSerialnumber(long serialnumber) {
+    this->serialnumber = serialnumber;
+}
+
+Plant::~Plant() {
+    // TODO Auto-generated destructor stub
+}
+
+void Plant::addInverter(Inverter inv) {
+    this->inverters.push_back(inv);
+}
 
 } /* namespace solarlogdatafetcher */

@@ -9,33 +9,38 @@
 #define PLANT_H_
 #include "Inverter.h"
 #include <vector>
+#include <iostream>
 #include <string>
-#include "md5.h"
+
 using namespace std;
 namespace solarlogdatafetcher {
 
-    class Plant {
-    private:
-        string name;
-        long serialnumber;
-        string password;
-        string digest;
-        int inverterCount;
-        vector<Inverter> inverters;
-    public:
-        Plant();
-        Plant(string name, long serialnumber, string password);
-        virtual ~Plant();
-        const vector<Inverter>& getInverters() const;
-        const string& getName() const;
-        void setName(const string& name);
-        const string& getPassword() const;
-        void setPassword(const string& password);
-        long getSerialnumber() const;
-        void setSerialnumber(long serialnumber);
-        void addInverter(Inverter inv);
-        int getInverterCount() const;
-    };
+class Plant {
+private:
+    string name;
+    long serialnumber;
+    string password;
+    int inverterCount;
+    string httpResponse;
+    vector<Inverter> inverters;
+public:
+    Plant();
+    Plant(string name, long serialnumber, string password, int invCount);
+    Plant(const Plant &other);
+    virtual ~Plant();
+    const vector<Inverter>& getInverters() const;
+    const string& getName() const;
+    void setName(const string& name);
+    const string& getPassword() const;
+    void setPassword(const string& password);
+    long getSerialnumber() const;
+    void setSerialnumber(long serialnumber);
+    void addInverter(Inverter inv);
+    int getInverterCount() const;
+    void setInverterCount(int inverterCount);
+    void setHttpResponse(string httpResponse);
+    string getHttpResponse() const;
+};
 
 } /* namespace solarlogdatafetcher */
 

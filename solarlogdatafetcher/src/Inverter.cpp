@@ -8,52 +8,53 @@
 #include "Inverter.h"
 #include <vector>
 #include <string>
+#include "plant.h"
 using namespace std;
 namespace solarlogdatafetcher {
 
-    Inverter::Inverter() {
-        this->name = "";
-        this->number = 0;
-        this->stringcount = 0;
-    }
+Inverter::Inverter() {
+    this->name = "";
+    this->number = 0;
+    this->stringcount = 0;
+}
 
-    Inverter::Inverter(std::string name, int number) {
-        this->name = name;
-        this->number = number;
-        this->stringcount = 0;
-    }
+Inverter::Inverter(std::string name, int number) {
+    this->name = name;
+    this->number = number;
+    this->stringcount = 0;
+}
 
-    const std::vector<Modulestring>& Inverter::getModulestrings() const {
-        return modulestrings;
-    }
+const std::vector<Modulestring>& Inverter::getModulestrings() const {
+    return modulestrings;
+}
 
-    const std::string& Inverter::getName() const {
-        return name;
-    }
+const std::string& Inverter::getName() const {
+    return name;
+}
 
-    void Inverter::setName(const string& name) {
-        this->name = name;
-    }
+void Inverter::setName(const string& name) {
+    this->name = name;
+}
 
-    int Inverter::getNumber() const {
-        return number;
-    }
+int Inverter::getNumber() const {
+    return number;
+}
 
-    void Inverter::setNumber(int number) {
-        this->number = number;
-    }
+void Inverter::setNumber(int number) {
+    this->number = number;
+}
 
-    int Inverter::getStringcount() const {
-        return stringcount;
-    }
+int Inverter::getStringcount() const {
+    return stringcount;
+}
 
-    Inverter::~Inverter() {
+Inverter::~Inverter() {
 
-    }
+}
 
-    void Inverter::addString(Modulestring mstring) {
-        this->modulestrings.push_back(mstring);
-        this->stringcount++;
-    }
+void Inverter::addString(Modulestring mstring) {
+    this->modulestrings.push_back(mstring);
+    this->stringcount++;
+}
 
 } /* namespace solarlogdatafetcher */
