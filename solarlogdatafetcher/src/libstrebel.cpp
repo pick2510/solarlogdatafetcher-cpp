@@ -67,10 +67,11 @@ void removeCharsFromString(std::string &str, char* charsToRemove) {
         str.erase(remove(str.begin(), str.end(), charsToRemove[i]), str.end());
     }
 }
+
 std::vector<std::string> splitString(std::string &str, char &token) {
-   std::istringstream split(str);
-   std::vector<std::string> tokens;
-   for (std::string each; std::getline(split, each, token); tokens.push_back(each));
-   return tokens; 
+    std::istringstream split(str);
+    std::vector<std::string> tokens;
+    for (std::string each; std::getline(split, each, token); tokens.push_back(each));
+    return tokens;
 }
 }

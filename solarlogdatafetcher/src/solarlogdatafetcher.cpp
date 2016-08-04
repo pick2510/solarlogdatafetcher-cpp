@@ -22,8 +22,7 @@
 #include "boost/date_time.hpp"
 #include "Plant.h"
 #include "Inverter.h"
-#include "Modulestring.h"
-#include "boost/network/protocol/http/client.hpp"
+#include "curl/curl.h"
 
 using namespace std;
 using namespace boost::posix_time;
@@ -31,6 +30,9 @@ using namespace boost::gregorian;
 
 const locale OUTPUT_FMT(std::locale::classic(),
         new boost::gregorian::date_facet("%d-%m-%Y"));
+
+const locale URL_DATE_FMT(std::locale::classic(),
+        new boost::gregorian::date_facet("%y%m%d"));
 
 const bool DEBUG = true;
 
@@ -110,7 +112,7 @@ void parseInverters(solarlogdatafetcher::Plant &plant) {
     cout << "Parsing Inverters" << endl;
     cout << "==============================================================" << endl;
     string s_response = plant.getHttpResponse();
-    unsigned int i_stringcount=0;
+    unsigned int i_stringcount = 0;
     for (int i = 0; i < plant.getInverterCount(); i++) {
         stringstream ss_invregex;
         string s_invname;
@@ -126,11 +128,11 @@ void parseInverters(solarlogdatafetcher::Plant &plant) {
             exit(1);
         }
         s_invname = m_invresult[1];
-        if (DEBUG == true){
+        if (DEBUG == true) {
             cout << s_invname << endl;
         }
         ss_invregex.str("");
-        
+
         string s_invstringnames;
         smatch m_invnameresult;
         ss_invregex << "WRInfo\\[" << i << "\\]\\[6\\]=new\\sArray\\(\"([\\s\\w,.\\-\"]*)";
@@ -148,28 +150,34 @@ void parseInverters(solarlogdatafetcher::Plant &plant) {
         strebel::removeCharsFromString(s_invstringnames, c_rem);
         char c_tok = ',';
         vector<string> v_stringnames = strebel::splitString(s_invstringnames, c_tok);
-        if (DEBUG == true){
+        if (DEBUG == true) {
             cout << s_invstringnames << endl;
         }
-        solarlogdatafetcher::Inverter inv = solarlogdatafetcher::Inverter(s_invname, i+1);
-        for (unsigned int i = 0; i != v_stringnames.size(); i++) {
-              solarlogdatafetcher::Modulestring m_string = solarlogdatafetcher::Modulestring(v_stringnames[i], i+1);
-              inv.addString(m_string);
-        }        
+        solarlogdatafetcher::Inverter inv = solarlogdatafetcher::Inverter(s_invname, i + 1);
+        inv.setModulestrings(v_stringnames);
+        inv.setStringcount(v_stringnames.size());
         i_stringcount += v_stringnames.size();
-        cout << i_stringcount << endl;
         plant.addInverter(inv);
-        
+
     }
+    cout << "==============================================================" << endl;
+    cout << "Got " << i_stringcount << " String(s) at " << plant.getInverterCount() << " Inverter(s)" << endl;
+    cout << "==============================================================" << endl;
+}
+
+static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp) {
+    ((std::string*)userp)->append((char*) contents, size * nmemb);
+    return size * nmemb;
 }
 
 solarlogdatafetcher::Plant parseBasevars(map<string, string> &plant_config) {
     string s_serialnumber;
-    s_serialnumber.append(plant_config.at("Serialnumber"));
+    s_serialnumber = plant_config["Serialnumber"];
     string s_password;
-    s_password = plant_config.at("Password");
+    s_password = plant_config["Password"];
     MD5 md5(s_password);
     s_password = md5.hexdigest();
+    plant_config["Password"] = s_password;
     stringstream ss_url;
     ss_url << "http://clevergie.solarlog-web.ch/api?access=iphone&file=base_vars.js&sn=" << s_serialnumber
             << "&pwd=" << s_password;
@@ -177,18 +185,25 @@ solarlogdatafetcher::Plant parseBasevars(map<string, string> &plant_config) {
     if (DEBUG == true) {
         cout << s_BaseURL << endl;
     }
-    boost::network::http::client hc_client;
-    boost::network::http::client::request rq_request(s_BaseURL);
-    rq_request << boost::network::header("Connection", "close");
-    boost::network::http::client::response re_response = hc_client.get(rq_request);
-    string s_response = re_response.body();
-    char c_buffer[s_response.length()];
-    copy(s_response.begin(), s_response.end(), c_buffer);
-    size_t test = strebel::iso8859_1_to_utf8(c_buffer, s_response.length()*1.5);
+    CURL *curl;
+    CURLcode c_res;
+    string s_readBuffer;
+    curl = curl_easy_init();
+    if (curl) {
+        curl_easy_setopt(curl, CURLOPT_URL, s_BaseURL.c_str());
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &s_readBuffer);
+        c_res = curl_easy_perform(curl);
+        curl_easy_cleanup(curl);
+    }
+    char c_buffer[s_readBuffer.length()];
+    copy(s_readBuffer.begin(), s_readBuffer.end(), c_buffer);
+    size_t test = strebel::iso8859_1_to_utf8(c_buffer, s_readBuffer.length()*1.5);
     if (test != 0) {
         cout << "ERROR, couldn't allocate enough space for conversion, need " << test << endl;
         exit(1);
     }
+    string s_response;
     s_response.assign(c_buffer);
     if (DEBUG == true) {
         cout << s_response << endl;
@@ -291,5 +306,7 @@ int main(int argc, char *argv[]) {
     plant = parseBasevars(plant_config);
     cout << plant.getName() << endl;
     parseInverters(plant);
+    plant.generateCSVHeader();
+    plant.fetchData(d_startdate,d_enddate);
     return 0;
 }

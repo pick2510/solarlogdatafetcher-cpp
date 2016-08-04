@@ -12,19 +12,22 @@
 using namespace std;
 namespace solarlogdatafetcher {
 
+
 Inverter::Inverter() {
     this->name = "";
     this->number = 0;
     this->stringcount = 0;
+    this->csvHeader = "";
 }
 
 Inverter::Inverter(std::string name, int number) {
     this->name = name;
     this->number = number;
     this->stringcount = 0;
+    this->csvHeader = "";
 }
 
-const std::vector<Modulestring>& Inverter::getModulestrings() const {
+const std::vector<string>& Inverter::getModulestrings() const{
     return modulestrings;
 }
 
@@ -52,9 +55,22 @@ Inverter::~Inverter() {
 
 }
 
-void Inverter::addString(Modulestring mstring) {
-    this->modulestrings.push_back(mstring);
-    this->stringcount++;
+
+
+void Inverter::setCsvHeader(string csvHeader) {
+    this->csvHeader = csvHeader;
+}
+
+string Inverter::getCsvHeader() const {
+    return csvHeader;
+}
+
+void Inverter::setModulestrings(vector<string> modulestrings) {
+    this->modulestrings = modulestrings;
+}
+
+void Inverter::setStringcount(int stringcount) {
+    this->stringcount = stringcount;
 }
 
 } /* namespace solarlogdatafetcher */

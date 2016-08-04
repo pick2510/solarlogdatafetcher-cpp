@@ -11,6 +11,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include "boost/date_time.hpp"
 
 using namespace std;
 namespace solarlogdatafetcher {
@@ -23,6 +24,7 @@ private:
     int inverterCount;
     string httpResponse;
     vector<Inverter> inverters;
+    vector<string> content;
 public:
     Plant();
     Plant(string name, long serialnumber, string password, int invCount);
@@ -40,8 +42,13 @@ public:
     void setInverterCount(int inverterCount);
     void setHttpResponse(string httpResponse);
     string getHttpResponse() const;
+    void setInverters(vector<Inverter> inverters);
+    void fetchData(boost::gregorian::date &d_startdate, boost::gregorian::date &d_enddate);
+    void generateCSVHeader();
+    void setContent(vector<string> content);
+    vector<string> getContent() const;
 };
-
+static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp);
 } /* namespace solarlogdatafetcher */
 
 #endif /* PLANT_H_ */

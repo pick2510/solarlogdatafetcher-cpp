@@ -20,8 +20,9 @@ std::string trim(const std::string &s);
 void decode_utf8(const std::string& bytes, std::wstring& wstr);
 void encode_utf8(const std::wstring& wstr, std::string& bytes);
 size_t iso8859_1_to_utf8(char *content, size_t max_size);
-void removeCharsFromString( std::string &str, char* charsToRemove );
+void removeCharsFromString(std::string &str, char* charsToRemove);
 std::vector<std::string> splitString(std::string &str, char &token);
+
 }
 #endif /* LIBSTREBEL_H */
 
